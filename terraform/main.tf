@@ -43,7 +43,7 @@ data "aws_vpc" "vpc" {
 }
 
 resource "aws_security_group" "allow_ssh" {
-  name        = "SSH_sg-${var.ENV}-2"
+  name        = "SSH_sg-${var.ENV}"
   description = "Allow ssh for sftp."
   vpc_id      = data.aws_vpc.vpc.id
 
@@ -63,7 +63,7 @@ resource "aws_security_group_rule" "ssh" {
 }
 
 resource "aws_lb" "ga_alb" {
-  name                              = "ga-alb-${var.ENV}-2"
+  name                              = "ga-alb-${var.ENV}"
   internal                          = true
   load_balancer_type                = "application"
   security_groups                   = [data.aws_security_group.web.id]
@@ -77,7 +77,7 @@ resource "aws_lb" "ga_alb" {
 }
 
 resource "aws_lb" "ga_nlb" {
-  name                              = "ga-nlb-${var.ENV}-2"
+  name                              = "ga-nlb-${var.ENV}"
   internal                          = true
   load_balancer_type                = "network"
   security_groups                   = [data.aws_security_group.web.id, aws_security_group.allow_ssh.id]
