@@ -48,7 +48,7 @@ resource "aws_security_group" "allow_ssh" {
   vpc_id      = data.aws_vpc.vpc.id
 
   tags = {
-    Name = "SSH_sg-${var.ENV}"
+    Name = "SSH-${var.ENV}_sg"
   }
 }
 
