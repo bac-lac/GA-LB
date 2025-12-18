@@ -43,8 +43,8 @@ data "aws_vpc" "vpc" {
 }
 
 resource "aws_security_group" "allow_ssh" {
-  name        = "SSH_sg-${var.ENV}"
-  description = "Allow ssh for sftp."
+  name        = "SSH-${var.ENV}_sg"
+  description = "Allow SSH for SFTP."
   vpc_id      = data.aws_vpc.vpc.id
 
   tags = {
@@ -53,7 +53,7 @@ resource "aws_security_group" "allow_ssh" {
 }
 
 resource "aws_security_group_rule" "ssh" {
-  description       = "Allow ssh for sftp."
+  description       = "Allow SSH for SFTP."
   type              = "ingress"
   from_port         = 22
   to_port           = 22
