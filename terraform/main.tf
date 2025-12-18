@@ -2,7 +2,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "5.45.0"
+      version = "6.27.0"
     }
   }
 
@@ -48,7 +48,7 @@ resource "aws_security_group" "allow_ssh" {
   vpc_id      = data.aws_vpc.vpc.id
 
   tags = {
-    Name = "SSH_sg"
+    Name = "SSH_sg-${var.ENV}"
   }
 }
 
