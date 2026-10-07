@@ -43,13 +43,13 @@ data "aws_vpc" "vpc" {
   }
 }
 
-resource "aws_security_group" "allow_ssh" {
-  name        = "SSH-${var.ENV}_sg"
-  description = "Allow SSH for SFTP."
+resource "aws_security_group" "custom_sg" {
+  name        = "Custom-${var.ENV}_sg"
+  description = "Allow SSH for SFTP and 8009 for GoAnywhere Agent."
   vpc_id      = data.aws_vpc.vpc.id
 
   tags = {
-    Name = "SSH-${var.ENV}_sg"
+    Name = "Custom-${var.ENV}_sg"
   }
 }
 
@@ -60,7 +60,17 @@ resource "aws_security_group_rule" "ssh" {
   to_port           = 22
   protocol          = "tcp"
   cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = aws_security_group.allow_ssh.id
+  security_group_id = aws_security_group.custom_sg.id
+}
+
+resource "aws_security_group_rule" "goanywhere_agent" {
+  description       = "Allow 8009 for GoAnywhere Agent."
+  type              = "ingress"
+  from_port         = 8009
+  to_port           = 8009
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.custom_sg.id
 }
 
 resource "aws_lb" "ga_alb" {
@@ -81,7 +91,7 @@ resource "aws_lb" "ga_nlb" {
   name                              = "ga-nlb-${var.ENV}"
   internal                          = true
   load_balancer_type                = "network"
-  security_groups                   = [data.aws_security_group.web.id, aws_security_group.allow_ssh.id]
+  security_groups                   = [data.aws_security_group.web.id, aws_security_group.custom_sg.id]
   subnets                           = data.aws_subnets.web.ids
   enable_cross_zone_load_balancing  = true
   enable_deletion_protection        = true
